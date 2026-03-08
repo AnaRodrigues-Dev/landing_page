@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ana Rodrigues — Desenvolvedora Frontend</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --neon:#ff2d78;--neon-dim:#cc1f5e;--neon-glow:rgba(255,45,120,0.25);--neon-subtle:rgba(255,45,120,0.08);--neon-border:rgba(255,45,120,0.30);
+      --font-display:'Space Grotesk',sans-serif;--font-mono:'JetBrains Mono',monospace;
+      --radius-card:4px;--radius-pill:9999px;
+    }
+    [data-theme="dark"]{--bg-base:#080b12;--bg-surface:#0d1117;--bg-card:#111620;--bg-card-hover:#141a26;--bg-nav:rgba(8,11,18,0.94);--border:rgba(255,255,255,0.07);--border-accent:rgba(255,45,120,0.35);--text-primary:#eef2ff;--text-secondary:#8892aa;--text-muted:#4a5268;--grid-line:rgba(255,45,120,0.04);}
+    [data-theme="light"]{--bg-base:#f7f8fc;--bg-surface:#ffffff;--bg-card:#ffffff;--bg-card-hover:#fdf0f5;--bg-nav:rgba(247,248,252,0.94);--border:rgba(0,0,0,0.08);--border-accent:rgba(255,45,120,0.40);--text-primary:#0d0f18;--text-secondary:#4a5268;--text-muted:#9aa0b8;--grid-line:rgba(255,45,120,0.05);}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{scroll-behavior:smooth;font-size:16px;}
+    body{font-family:var(--font-display);background-color:var(--bg-base);color:var(--text-primary);line-height:1.6;overflow-x:hidden;transition:background-color 0.4s ease,color 0.4s ease;cursor:none;}
+    a{text-decoration:none;color:inherit;cursor:none;}
+    button{cursor:none;border:none;background:none;font-family:inherit;}
+    img{display:block;max-width:100%;}
+    ::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-track{background:var(--bg-base);}::-webkit-scrollbar-thumb{background:var(--neon-dim);border-radius:2px;}
+    #cursor-dot{position:fixed;width:6px;height:6px;background:var(--neon);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:transform 0.08s ease;mix-blend-mode:screen;}
+    #cursor-ring{position:fixed;width:32px;height:32px;border:1px solid rgba(255,45,120,0.5);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:width 0.2s ease,height 0.2s ease,border-color 0.2s ease;}
+    body:has(a:hover) #cursor-ring,body:has(button:hover) #cursor-ring{width:48px;height:48px;border-color:rgba(255,45,120,0.8);}
+    .grid-bg{position:fixed;inset:0;pointer-events:none;z-index:0;background-image:linear-gradient(var(--grid-line) 1px,transparent 1px),linear-gradient(90deg,var(--grid-line) 1px,transparent 1px);background-size:60px 60px;}
+    .container{max-width:1120px;margin:0 auto;padding:0 24px;}
+    .text-neon{color:var(--neon);}
+    .text-gradient{background:linear-gradient(135deg,var(--neon) 0%,#ff8fb3 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+    [data-theme="light"] .text-gradient{background:linear-gradient(135deg,#cc1f5e 0%,var(--neon) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+    .mono{font-family:var(--font-mono);}
+    .divider{height:1px;background:linear-gradient(90deg,transparent,var(--neon-border),transparent);margin:0;}
+    .reveal{opacity:0;transform:translateY(24px);transition:opacity 0.6s ease,transform 0.6s ease;}
+    .reveal.visible{opacity:1;transform:translateY(0);}
+    .reveal-delay-1{transition-delay:0.1s;}.reveal-delay-2{transition-delay:0.2s;}.reveal-delay-3{transition-delay:0.3s;}.reveal-delay-4{transition-delay:0.4s;}
+    .section-label{display:flex;align-items:center;gap:12px;margin-bottom:20px;}
+    .section-label .num{font-family:var(--font-mono);font-size:11px;color:var(--neon);letter-spacing:0.12em;}
+    .section-label .line{flex:1;max-width:40px;height:1px;background:var(--neon-border);}
+    .section-label .label{font-family:var(--font-mono);font-size:11px;color:var(--text-muted);letter-spacing:0.12em;text-transform:uppercase;}
+    .btn-primary{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;background:var(--neon);color:#fff;font-family:var(--font-display);font-weight:600;font-size:14px;letter-spacing:0.02em;border-radius:var(--radius-pill);position:relative;overflow:hidden;transition:box-shadow 0.25s ease,transform 0.2s ease;}
+    .btn-primary:hover{box-shadow:0 0 28px rgba(255,45,120,0.55),0 0 60px rgba(255,45,120,0.15);transform:translateY(-1px);}
+    .btn-primary:active{transform:scale(0.98);}
+    .btn-outline{display:inline-flex;align-items:center;gap:8px;padding:11px 28px;border:1px solid var(--border-accent);color:var(--neon);font-family:var(--font-display);font-weight:600;font-size:14px;letter-spacing:0.02em;border-radius:var(--radius-pill);transition:background 0.2s ease,box-shadow 0.2s ease,transform 0.2s ease;}
+    .btn-outline:hover{background:var(--neon-subtle);box-shadow:0 0 16px var(--neon-glow);transform:translateY(-1px);}
+    .card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-card);transition:border-color 0.25s ease,background 0.25s ease,transform 0.25s ease,box-shadow 0.25s ease;}
+    .card:hover{border-color:var(--border-accent);background:var(--bg-card-hover);}
+    .social-btn{width:38px;height:38px;display:flex;align-items:center;justify-content:center;border-radius:50%;border:1px solid var(--border);color:var(--text-secondary);transition:border-color 0.2s,color 0.2s,background 0.2s,transform 0.2s,box-shadow 0.2s;}
+    .social-btn:hover{border-color:var(--neon);color:var(--neon);background:var(--neon-subtle);transform:scale(1.1);box-shadow:0 0 12px var(--neon-glow);}
+    #navbar{position:fixed;top:0;left:0;right:0;z-index:40;transition:background 0.3s ease,border-color 0.3s ease;}
+    #navbar.scrolled{background:var(--bg-nav);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+    .nav-inner{display:flex;align-items:center;justify-content:space-between;padding:18px 0;}
+    .nav-logo{font-family:var(--font-mono);font-size:18px;font-weight:500;color:var(--text-primary);letter-spacing:-0.02em;}
+    .nav-logo span{color:var(--neon);}
+    .nav-links{display:flex;align-items:center;gap:32px;list-style:none;}
+    .nav-link{font-size:13px;font-weight:500;color:var(--text-secondary);letter-spacing:0.02em;position:relative;transition:color 0.2s ease;}
+    .nav-link::after{content:'';position:absolute;bottom:-3px;left:0;width:0;height:1px;background:var(--neon);transition:width 0.25s ease;}
+    .nav-link:hover,.nav-link.active{color:var(--text-primary);}
+    .nav-link:hover::after,.nav-link.active::after{width:100%;}
+    .nav-actions{display:flex;align-items:center;gap:12px;}
+    .theme-toggle{display:flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;border:1px solid var(--border);color:var(--text-secondary);transition:border-color 0.2s,color 0.2s,transform 0.3s;}
+    .theme-toggle:hover{border-color:var(--neon);color:var(--neon);transform:rotate(15deg);}
+    .hamburger{display:none;flex-direction:column;gap:5px;padding:8px;}
+    .hamburger span{display:block;width:22px;height:1.5px;background:var(--text-secondary);transition:all 0.3s ease;}
+    .hamburger.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg);}
+    .hamburger.open span:nth-child(2){opacity:0;}
+    .hamburger.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg);}
+    #mobile-menu{overflow:hidden;max-height:0;opacity:0;transition:max-height 0.35s ease,opacity 0.3s ease;background:var(--bg-surface);border-bottom:1px solid var(--border);}
+    #mobile-menu.open{max-height:360px;opacity:1;}
+    .mobile-nav-links{display:flex;flex-direction:column;gap:0;padding:8px 0;list-style:none;}
+    .mobile-nav-links li a{display:block;padding:14px 24px;font-size:14px;color:var(--text-secondary);border-left:2px solid transparent;transition:color 0.2s,border-color 0.2s,background 0.2s;}
+    .mobile-nav-links li a:hover{color:var(--neon);border-left-color:var(--neon);background:var(--neon-subtle);}
+    #hero{position:relative;min-height:100vh;display:flex;align-items:center;padding:100px 0 64px;overflow:hidden;}
+    .hero-bg-glow{position:absolute;border-radius:50%;filter:blur(120px);pointer-events:none;}
+    .hero-bg-glow-1{width:600px;height:600px;top:-200px;left:-200px;background:radial-gradient(ellipse,rgba(255,45,120,0.12) 0%,transparent 70%);}
+    .hero-bg-glow-2{width:400px;height:400px;bottom:-100px;right:-100px;background:radial-gradient(ellipse,rgba(255,45,120,0.07) 0%,transparent 70%);}
+    .hero-inner{display:grid;grid-template-columns:1fr auto;align-items:center;gap:80px;}
+    .hero-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border:1px solid var(--neon-border);border-radius:var(--radius-pill);background:var(--neon-subtle);font-family:var(--font-mono);font-size:11px;color:var(--neon);letter-spacing:0.08em;margin-bottom:28px;}
+    .hero-badge-dot{width:6px;height:6px;border-radius:50%;background:var(--neon);animation:pulse-dot 2s ease-in-out infinite;}
+    @keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.4;transform:scale(0.7);}}
+    .hero-eyebrow{font-family:var(--font-mono);font-size:13px;color:var(--text-muted);letter-spacing:0.06em;margin-bottom:12px;}
+    .hero-name{font-size:clamp(52px,8vw,80px);font-weight:700;line-height:1.0;letter-spacing:-0.03em;color:var(--text-primary);margin-bottom:16px;}
+    .hero-role{font-family:var(--font-mono);font-size:clamp(16px,2.5vw,22px);font-weight:300;color:var(--text-secondary);margin-bottom:24px;min-height:1.5em;}
+    .hero-role .cursor{display:inline-block;width:2px;height:1em;background:var(--neon);margin-left:3px;vertical-align:middle;animation:blink 1s step-end infinite;}
+    @keyframes blink{0%,100%{opacity:1;}50%{opacity:0;}}
+    .hero-description{font-size:15px;line-height:1.8;color:var(--text-secondary);max-width:480px;margin-bottom:12px;}
+    .hero-subdesc{font-size:14px;line-height:1.8;color:var(--text-muted);max-width:460px;margin-bottom:36px;}
+    .hero-actions{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:48px;}
+    .hero-social{display:flex;align-items:center;gap:12px;}
+    .hero-avatar-wrap{position:relative;flex-shrink:0;}
+    .hero-avatar-frame{position:relative;width:280px;height:auto;}
+    .hero-avatar-border{position:absolute;inset:-2px;border-radius:3px;background:linear-gradient(135deg,var(--neon),transparent,var(--neon));animation:rotate-border 6s linear infinite;padding:2px;}
+    @keyframes rotate-border{to{transform:rotate(360deg);}}
+    .hero-avatar-img{position:relative;width:100%;height:100%;border-radius:var(--radius-card);background:var(--bg-card);border:1px solid var(--border);z-index:1;}
+    .hero-avatar-img img{width:100%;height:100%;object-fit:contain;filter:grayscale(20%);}
+    .hero-avatar-corner{position:absolute;width:16px;height:16px;z-index:2;}
+    .hero-avatar-corner.tl{top:4px;left:4px;border-top:2px solid var(--neon);border-left:2px solid var(--neon);}
+    .hero-avatar-corner.tr{top:4px;right:4px;border-top:2px solid var(--neon);border-right:2px solid var(--neon);}
+    .hero-avatar-corner.bl{bottom:4px;left:4px;border-bottom:2px solid var(--neon);border-left:2px solid var(--neon);}
+    .hero-avatar-corner.br{bottom:4px;right:4px;border-bottom:2px solid var(--neon);border-right:2px solid var(--neon);}
+    .hero-avatar-badge{position:absolute;bottom:-14px;left:50%;transform:translateX(-50%);white-space:nowrap;padding:6px 16px;background:var(--bg-card);border:1px solid var(--border-accent);border-radius:var(--radius-pill);font-family:var(--font-mono);font-size:11px;color:var(--text-secondary);z-index:2;}
+    .hero-avatar-badge span{color:var(--neon);}
+    .scroll-hint{position:absolute;bottom:36px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:6px;color:var(--text-muted);font-family:var(--font-mono);font-size:10px;letter-spacing:0.1em;text-transform:uppercase;}
+    .scroll-hint-line{width:1px;height:40px;background:linear-gradient(to bottom,var(--neon),transparent);animation:scroll-line 1.5s ease-in-out infinite;}
+    @keyframes scroll-line{0%,100%{opacity:0.3;transform:scaleY(1);}50%{opacity:1;}}
+    .section{position:relative;padding:96px 0;z-index:1;}
+    .section-header{margin-bottom:56px;}
+    .section-title{font-size:clamp(28px,4vw,40px);font-weight:700;letter-spacing:-0.025em;color:var(--text-primary);line-height:1.2;margin-bottom:12px;}
+    .section-subtitle{font-size:15px;color:var(--text-secondary);max-width:480px;}
+    .about-grid{display:grid;grid-template-columns:1fr 1.6fr;gap:64px;align-items:start;}
+    .about-photo{position:relative;aspect-ratio:3/4;border-radius:var(--radius-card);overflow:hidden;border:1px solid var(--border);}
+    .about-photo img{width:100%;height:100%;object-fit:cover;}
+    .about-photo-overlay{position:absolute;inset:0;background:linear-gradient(to top,var(--bg-base) 0%,transparent 50%);}
+    .about-photo-tags{position:absolute;bottom:16px;left:16px;right:16px;display:flex;gap:8px;flex-wrap:wrap;}
+    .tech-tag{padding:3px 10px;background:var(--neon-subtle);border:1px solid var(--neon-border);border-radius:2px;font-family:var(--font-mono);font-size:11px;color:var(--neon);letter-spacing:0.06em;}
+    .about-text p{font-size:15px;line-height:1.8;color:var(--text-secondary);margin-bottom:16px;}
+    .about-pillars{display:flex;flex-direction:column;gap:10px;margin:24px 0 32px;}
+    .about-pillar{display:flex;align-items:center;gap:12px;font-size:14px;color:var(--text-secondary);}
+    .about-pillar::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--neon);flex-shrink:0;}
+    .about-pillar strong{color:var(--text-primary);font-weight:500;}
+    .skill-tags{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:40px;}
+    .skill-tag{padding:6px 14px;background:var(--bg-surface);border:1px solid var(--border);border-radius:2px;font-size:13px;font-weight:500;color:var(--text-secondary);transition:border-color 0.2s,color 0.2s,background 0.2s,transform 0.2s;}
+    .skill-tag:hover{border-color:var(--neon-border);color:var(--neon);background:var(--neon-subtle);transform:translateY(-2px);}
+    .stats-row{display:flex;gap:40px;}
+    .stat-value{font-size:36px;font-weight:700;letter-spacing:-0.03em;line-height:1;margin-bottom:4px;}
+    .stat-label{font-size:12px;color:var(--text-muted);letter-spacing:0.04em;}
+    .services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+    .service-card{padding:32px;position:relative;overflow:hidden;}
+    .service-card::before{content:'';position:absolute;top:0;left:0;height:2px;width:0;background:var(--neon);transition:width 0.4s ease;}
+    .service-card:hover::before{width:100%;}
+    .service-card:hover{box-shadow:0 8px 32px rgba(0,0,0,0.2),0 0 0 1px var(--border-accent);}
+    .service-icon{width:44px;height:44px;border-radius:4px;background:var(--neon-subtle);border:1px solid var(--neon-border);display:flex;align-items:center;justify-content:center;margin-bottom:20px;color:var(--neon);}
+    .service-title{font-size:17px;font-weight:600;color:var(--text-primary);margin-bottom:10px;letter-spacing:-0.01em;}
+    .service-desc{font-size:14px;line-height:1.7;color:var(--text-secondary);margin-bottom:20px;}
+    .service-tags{display:flex;flex-wrap:wrap;gap:6px;}
+    .projects-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+    .project-card{padding:0;overflow:hidden;position:relative;}
+    .project-card:hover{transform:translateY(-6px);box-shadow:0 20px 48px rgba(0,0,0,0.3),0 0 0 1px var(--border-accent);}
+    .project-preview{width:100%;aspect-ratio:16/9;background:var(--bg-surface);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+    .project-preview-dots{position:absolute;top:10px;left:12px;display:flex;gap:5px;}
+    .project-preview-dots span{width:7px;height:7px;border-radius:50%;background:var(--border);}
+    .project-preview-icon{color:var(--neon-border);transition:color 0.2s;}
+    .project-card:hover .project-preview-icon{color:var(--neon);}
+    .project-info{padding:20px 24px 24px;}
+    .project-title{font-size:16px;font-weight:600;color:var(--text-primary);margin-bottom:6px;letter-spacing:-0.01em;}
+    .project-desc{font-size:13px;color:var(--text-secondary);line-height:1.6;margin-bottom:16px;}
+    .project-cta{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--neon);letter-spacing:0.04em;text-transform:uppercase;font-family:var(--font-mono);transition:gap 0.2s;}
+    .project-card:hover .project-cta{gap:10px;}
+    .modal-overlay{position:fixed;inset:0;background:rgba(8,11,18,0.85);backdrop-filter:blur(12px);z-index:50;display:flex;align-items:center;justify-content:center;animation:fade-in 0.2s ease;}
+    [data-theme="light"] .modal-overlay{background:rgba(247,248,252,0.85);}
+    @keyframes fade-in{from{opacity:0;}to{opacity:1;}}
+    .modal-box{background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-card);width:100%;max-width:520px;max-height:85vh;overflow-y:auto;margin:16px;animation:slide-up 0.3s ease;}
+    @keyframes slide-up{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+    .modal-header{display:flex;align-items:center;justify-content:space-between;padding:24px 28px;border-bottom:1px solid var(--border);}
+    .modal-title{font-size:17px;font-weight:600;color:var(--text-primary);}
+    .modal-close{width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:50%;border:1px solid var(--border);color:var(--text-secondary);font-size:16px;transition:border-color 0.2s,color 0.2s;}
+    .modal-close:hover{border-color:var(--neon);color:var(--neon);}
+    .modal-body{padding:24px 28px;}
+    .hidden{display:none;}
+    .pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;align-items:start;}
+    .pricing-card{padding:32px;display:flex;flex-direction:column;}
+    .pricing-featured{background:linear-gradient(160deg,rgba(255,45,120,0.07) 0%,var(--bg-card) 100%);border-color:var(--border-accent) !important;position:relative;overflow:hidden;}
+    .pricing-badge{position:absolute;top:0;right:0;padding:5px 16px;background:var(--neon);font-size:11px;font-weight:600;color:#fff;font-family:var(--font-mono);letter-spacing:0.06em;border-radius:0 0 0 4px;}
+    .pricing-plan-type{font-family:var(--font-mono);font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;}
+    .pricing-featured .pricing-plan-type{color:var(--neon);}
+    .pricing-title{font-size:22px;font-weight:700;color:var(--text-primary);letter-spacing:-0.02em;margin-bottom:6px;}
+    .pricing-price{font-size:32px;font-weight:700;color:var(--text-primary);letter-spacing:-0.03em;margin-bottom:4px;line-height:1;}
+    .pricing-price sup{font-size:16px;font-weight:600;vertical-align:super;margin-right:2px;}
+    .pricing-price .period{font-size:13px;font-weight:400;color:var(--text-muted);font-family:var(--font-mono);}
+    .pricing-featured .pricing-price{color:var(--neon);}
+    .pricing-desc{font-size:13px;color:var(--text-secondary);margin-bottom:28px;line-height:1.6;margin-top:8px;}
+    .pricing-features{list-style:none;flex:1;margin-bottom:28px;}
+    .pricing-features li{display:flex;align-items:flex-start;gap:10px;font-size:13px;color:var(--text-secondary);padding:7px 0;border-bottom:1px solid var(--border);}
+    .pricing-features li:last-child{border-bottom:none;}
+    .pricing-features li svg{flex-shrink:0;margin-top:2px;color:var(--neon);}
+    .pricing-features li.off{opacity:0.4;}
+    .pricing-features li.off svg{color:var(--text-muted);}
+    .testimonials-header{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:40px;flex-wrap:wrap;}
+    .notif-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+    .notif-card{background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:14px 16px;display:flex;flex-direction:column;gap:10px;backdrop-filter:blur(12px);}
+    .notif-top{display:flex;align-items:center;justify-content:space-between;}
+    .notif-app{display:flex;align-items:center;gap:7px;}
+    .notif-app-icon{width:22px;height:22px;border-radius:6px;background:var(--neon);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+    .notif-app-name{font-size:11px;font-weight:600;color:var(--text-muted);letter-spacing:0.04em;text-transform:uppercase;font-family:var(--font-mono);}
+    .notif-time{font-size:11px;color:var(--text-muted);font-family:var(--font-mono);}
+    .notif-stars{display:flex;gap:2px;}
+    .notif-stars svg{color:#fbbf24;}
+    .notif-title{font-size:13px;font-weight:700;color:var(--text-primary);line-height:1.3;}
+    .notif-body{font-size:13px;color:var(--text-secondary);line-height:1.5;}
+    .notif-sender{display:flex;align-items:center;gap:8px;margin-top:2px;}
+    .notif-avatar{width:24px;height:24px;border-radius:50%;background:var(--neon-subtle);border:1px solid var(--neon-border);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--neon);flex-shrink:0;}
+    .notif-name{font-size:12px;font-weight:600;color:var(--text-muted);}
+    .notif-role{font-size:11px;color:var(--text-muted);font-family:var(--font-mono);}
+    @media(max-width:900px){.notif-grid{grid-template-columns:1fr 1fr;}}
+    @media(max-width:600px){.notif-grid{grid-template-columns:1fr;}}
+    .form-field{margin-bottom:16px;}
+    .form-label{display:block;font-size:12px;font-weight:500;color:var(--text-secondary);letter-spacing:0.06em;text-transform:uppercase;font-family:var(--font-mono);margin-bottom:6px;}
+    .form-input{width:100%;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-card);padding:10px 14px;font-size:14px;font-family:var(--font-display);color:var(--text-primary);outline:none;transition:border-color 0.2s,box-shadow 0.2s;}
+    .form-input:focus{border-color:var(--neon-border);box-shadow:0 0 0 3px rgba(255,45,120,0.08);}
+    .form-input::placeholder{color:var(--text-muted);}
+    textarea.form-input{resize:vertical;min-height:90px;}
+    .star-rating{display:flex;gap:6px;margin-bottom:4px;}
+    .star-btn{font-size:22px;color:var(--border);transition:color 0.15s,transform 0.15s;}
+    .star-btn:hover,.star-btn.active{color:#fbbf24;transform:scale(1.2);}
+    .contact-grid{display:grid;grid-template-columns:1fr 1.6fr;gap:48px;}
+    .contact-links{display:flex;flex-direction:column;gap:10px;}
+    .contact-link-card{display:flex;align-items:center;gap:14px;padding:14px 16px;transition:transform 0.2s;}
+    .contact-link-card:hover{transform:translateX(4px);}
+    .contact-link-icon{width:38px;height:38px;border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:var(--neon-subtle);border:1px solid var(--neon-border);color:var(--neon);}
+    .contact-link-name{font-size:14px;font-weight:600;color:var(--text-primary);}
+    .contact-link-handle{font-family:var(--font-mono);font-size:12px;color:var(--text-muted);}
+    .contact-link-arrow{margin-left:auto;color:var(--text-muted);transition:transform 0.2s,color 0.2s;}
+    .contact-link-card:hover .contact-link-arrow{transform:translateX(4px);color:var(--neon);}
+    .contact-form{padding:32px;}
+    .contact-form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+    .contact-success{display:none;text-align:center;padding:40px 20px;}
+    .contact-success.visible{display:block;}
+    .success-icon{width:56px;height:56px;border-radius:50%;background:var(--neon-subtle);border:1px solid var(--neon-border);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;color:var(--neon);}
+    .contact-success h4{font-size:20px;font-weight:600;color:var(--text-primary);margin-bottom:8px;}
+    .contact-success p{font-size:14px;color:var(--text-secondary);}
+    footer{border-top:1px solid var(--border);padding:32px 0;}
+    .footer-inner{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;}
+    .footer-logo{font-family:var(--font-mono);font-size:16px;font-weight:500;color:var(--text-primary);}
+    .footer-logo span{color:var(--neon);}
+    .footer-copy{font-size:12px;color:var(--text-muted);}
+    .footer-stack{font-family:var(--font-mono);font-size:11px;color:var(--text-muted);}
+    #back-to-top{position:fixed;bottom:28px;left:28px;z-index:100;width:40px;height:40px;border-radius:50%;background:var(--neon);color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(255,45,120,0.4);transform:translateY(80px);opacity:0;transition:transform 0.35s cubic-bezier(0.34,1.56,0.64,1),opacity 0.3s ease;}
+    #back-to-top.visible{transform:translateY(0);opacity:1;}
+    #back-to-top:hover{box-shadow:0 6px 28px rgba(255,45,120,0.6);}
+    #toast{position:fixed;bottom:28px;right:28px;z-index:9999;background:var(--bg-card);border:1px solid var(--border-accent);color:var(--text-primary);padding:12px 20px;border-radius:var(--radius-pill);font-size:13px;font-weight:500;box-shadow:0 8px 32px rgba(0,0,0,0.3),0 0 0 1px var(--neon-border);transform:translateY(80px);opacity:0;transition:transform 0.35s cubic-bezier(0.34,1.56,0.64,1),opacity 0.3s ease;pointer-events:none;}
+    #toast.show{transform:translateY(0);opacity:1;}
+    .modal-project-item{padding:16px;border:1px solid var(--border);border-radius:4px;margin-bottom:12px;transition:border-color 0.2s;}
+    .modal-project-item:last-child{margin-bottom:0;}
+    .modal-project-item:hover{border-color:var(--border-accent);}
+    .modal-project-item-header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:6px;}
+    .modal-project-item-title{font-size:14px;font-weight:600;color:var(--text-primary);}
+    .modal-project-item-desc{font-size:13px;color:var(--text-muted);line-height:1.6;}
+    @media(max-width:900px){.hero-inner{grid-template-columns:1fr;gap:48px;}.hero-avatar-wrap{order:-1;display:flex;justify-content:center;}.hero-avatar-frame{width:220px;height:270px;}.about-grid{grid-template-columns:1fr;}.about-photo{max-width:340px;}.services-grid{grid-template-columns:1fr;}.projects-grid{grid-template-columns:1fr 1fr;}.pricing-grid{grid-template-columns:1fr;}.contact-grid{grid-template-columns:1fr;}.nav-links{display:none;}.hamburger{display:flex;}.nav-actions .btn-primary{display:none;}.contact-form-row{grid-template-columns:1fr;}}
+    @media(max-width:600px){.projects-grid{grid-template-columns:1fr;}.hero-actions{flex-direction:column;align-items:flex-start;}.stats-row{gap:28px;}.footer-inner{flex-direction:column;text-align:center;}.testimonials-header{flex-direction:column;align-items:flex-start;}}
+  </style>
+</head>
+<body>
+  <div class="grid-bg" aria-hidden="true"></div>
+  <div id="cursor-dot" aria-hidden="true"></div>
+  <div id="cursor-ring" aria-hidden="true"></div>
+  <div id="toast" role="alert" aria-live="polite"></div>
+  <button id="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Voltar ao topo">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7"/></svg>
+  </button>
+
+  <!-- NAVBAR -->
+  <header id="navbar" role="banner">
+    <div class="container">
+      <div class="nav-inner">
+        <a href="#hero" class="nav-logo" aria-label="Inicio">AR<span>.</span></a>
+        <nav aria-label="Navegacao principal">
+          <ul class="nav-links">
+            <li><a href="#sobre" class="nav-link" data-section="sobre">Sobre</a></li>
+            <li><a href="#servicos" class="nav-link" data-section="servicos">Servicos</a></li>
+            <li><a href="#projetos" class="nav-link" data-section="projetos">Projetos</a></li>
+            <li><a href="#planos" class="nav-link" data-section="planos">Planos</a></li>
+            <li><a href="#depoimentos" class="nav-link" data-section="depoimentos">Depoimentos</a></li>
+          </ul>
+        </nav>
+        <div class="nav-actions">
+          <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" aria-label="Alternar tema">
+            <svg id="icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+            <svg id="icon-sun" class="hidden" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+          </button>
+          <a href="#contato" class="btn-primary">Contato</a>
+          <button class="hamburger" id="hamburger" onclick="toggleMobileMenu()" aria-label="Abrir menu" aria-expanded="false">
+            <span></span><span></span><span></span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <nav id="mobile-menu" aria-label="Menu mobile">
+      <ul class="mobile-nav-links">
+        <li><a href="#sobre" onclick="closeMobileMenu()">Sobre</a></li>
+        <li><a href="#servicos" onclick="closeMobileMenu()">Servicos</a></li>
+        <li><a href="#projetos" onclick="closeMobileMenu()">Projetos</a></li>
+        <li><a href="#planos" onclick="closeMobileMenu()">Planos</a></li>
+        <li><a href="#depoimentos" onclick="closeMobileMenu()">Depoimentos</a></li>
+        <li><a href="#contato" onclick="closeMobileMenu()" style="color:var(--neon)">Contato</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- HERO -->
+  <section id="hero" aria-label="Introducao">
+    <div class="hero-bg-glow hero-bg-glow-1" aria-hidden="true"></div>
+    <div class="hero-bg-glow hero-bg-glow-2" aria-hidden="true"></div>
+    <div class="container" style="position:relative;z-index:1;width:100%">
+      <div class="hero-inner">
+        <div>
+          <div class="hero-badge">
+            <span class="hero-badge-dot" aria-hidden="true"></span>
+            Especialista em presenca digital
+          </div>
+          <p class="hero-eyebrow mono">// desenvolvedora frontend & estrategia digital</p>
+          <h1 class="hero-name">Ana<br><span class="text-gradient">Rodrigues</span></h1>
+          <p class="hero-role mono">
+            <span id="typed-role"></span><span class="cursor" aria-hidden="true"></span>
+          </p>
+          <p class="hero-description">
+            Crio interfaces modernas e experiencias digitais estrategicas que transformam visitantes em clientes.
+          </p>
+          <p class="hero-subdesc">
+            Desenvolvo landing pages, sites institucionais e estrategias digitais para empresas que querem mais visibilidade, autoridade e conversao online.
+          </p>
+          <div class="hero-actions">
+            <a href="#contato" class="btn-primary">
+              Vamos conversar
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+            </a>
+            <a href="#projetos" class="btn-outline">Ver projetos</a>
+          </div>
+          <div class="hero-social" aria-label="Redes sociais">
+            <a href="#contato" class="social-btn" aria-label="LinkedIn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
+            </a>
+            <a href="#contato" class="social-btn" aria-label="GitHub">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.48 2 2 6.58 2 12.24c0 4.52 2.87 8.35 6.84 9.7.5.09.68-.22.68-.49v-1.7C6.73 20.3 6.14 18.45 6.14 18.45c-.46-1.19-1.12-1.5-1.12-1.5-.91-.64.07-.63.07-.63 1.01.07 1.54 1.06 1.54 1.06.9 1.57 2.36 1.12 2.94.85.09-.66.35-1.12.64-1.38-2.24-.26-4.59-1.14-4.59-5.07 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.71 0 0 .84-.27 2.75 1.05A9.38 9.38 0 0112 7.43c.85.004 1.7.12 2.5.34 1.9-1.32 2.74-1.05 2.74-1.05.55 1.41.2 2.45.1 2.71.64.72 1.03 1.63 1.03 2.75 0 3.94-2.36 4.81-4.61 5.06.36.32.68.94.68 1.9v2.82c0 .27.18.59.69.49C19.14 20.59 22 16.76 22 12.24 22 6.58 17.52 2 12 2z"/></svg>
+            </a>
+            <a href="#contato" class="social-btn" aria-label="E-mail">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 7l-10 7L2 7"/></svg>
+            </a>
+            <a href="#contato" class="social-btn" aria-label="Instagram">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+            </a>
+          </div>
+        </div>
+        <!-- Avatar -->
+        <div class="hero-avatar-wrap">
+          <div class="hero-avatar-frame">
+            <div class="hero-avatar-img">
+              <img src="image/Ana.png" alt="Ana Rodrigues"/>
+            </div>
+            <div class="hero-avatar-corner tl" aria-hidden="true"></div>
+            <div class="hero-avatar-corner tr" aria-hidden="true"></div>
+            <div class="hero-avatar-corner bl" aria-hidden="true"></div>
+            <div class="hero-avatar-corner br" aria-hidden="true"></div>
+            <div class="hero-avatar-badge"><span>3+</span> anos de experiencia</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <a href="#sobre" class="scroll-hint" aria-label="Rolar para sobre">
+      <span>scroll</span>
+      <div class="scroll-hint-line" aria-hidden="true"></div>
+    </a>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- SOBRE -->
+  <section id="sobre" class="section" aria-label="Sobre mim">
+    <div class="container">
+      <div class="section-label reveal">
+        <span class="num">02</span>
+        <div class="line"></div>
+        <span class="label">Sobre Mim</span>
+      </div>
+      <div class="about-grid">
+        <div class="reveal">
+          <div class="about-photo">
+            <img src="image/Ana_dev.png" alt="Ana trabalhando"/>
+            <div class="about-photo-overlay" aria-hidden="true"></div>
+            <div class="about-photo-tags">
+              <span class="tech-tag">Frontend</span>
+              <span class="tech-tag">UX / UI</span>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="section-header reveal">
+            <h2 class="section-title">Transformando ideias em<br><span class="text-gradient">experiencias digitais</span></h2>
+          </div>
+          <div class="reveal reveal-delay-1">
+            <p style="font-size:15px;line-height:1.8;color:var(--text-secondary);margin-bottom:14px">
+              Sou desenvolvedora frontend com foco em UI/UX, performance e posicionamento digital.
+            </p>
+            <p style="font-size:14px;line-height:1.8;color:var(--text-muted);margin-bottom:14px">
+              Meu trabalho vai alem de apenas escrever codigo — desenvolvo experiencias que conectam marcas e pessoas, criando interfaces modernas, rapidas e estrategicamente pensadas para gerar resultados.
+            </p>
+            <p style="font-size:14px;line-height:1.8;color:var(--text-muted);margin-bottom:8px">
+              Trabalho com empresas e profissionais que querem fortalecer sua presenca digital, atrair mais clientes e comunicar melhor seu valor no ambiente online. Cada projeto e desenvolvido com foco em tres pilares:
+            </p>
+            <div class="about-pillars">
+              <div class="about-pillar"><strong>Design estrategico</strong></div>
+              <div class="about-pillar"><strong>Experiencia do usuario</strong></div>
+              <div class="about-pillar"><strong>Performance e conversao</strong></div>
+            </div>
+          </div>
+          <div class="skill-tags reveal reveal-delay-2">
+            <span class="skill-tag">UX / UI Design</span>
+            <span class="skill-tag">Frontend Dev</span>
+            <span class="skill-tag">Estrategia de Conteudo</span>
+            <span class="skill-tag">Posicionamento Digital</span>
+          </div>
+          <div class="stats-row reveal reveal-delay-3">
+            <div class="stat-item">
+              <p class="stat-value text-gradient stat-num" data-target="3" data-suffix="+">0</p>
+              <p class="stat-label mono">anos estudando tecnologia</p>
+            </div>
+            <div class="stat-item">
+              <p class="stat-value text-gradient stat-num" data-target="40" data-suffix="+">0</p>
+              <p class="stat-label mono">projetos desenvolvidos</p>
+            </div>
+            <div class="stat-item">
+              <p class="stat-value text-gradient stat-num" data-target="100" data-suffix="%">0</p>
+              <p class="stat-label mono">foco em performance</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- SERVICOS -->
+  <section id="servicos" class="section" aria-label="Servicos">
+    <div class="container">
+      <div class="section-label reveal">
+        <span class="num">03</span>
+        <div class="line"></div>
+        <span class="label">Servicos</span>
+      </div>
+      <div class="section-header reveal">
+        <h2 class="section-title">O que eu faco de <span class="text-gradient">melhor</span></h2>
+        <p class="section-subtitle">Solucoes digitais focadas em crescimento e presenca online.</p>
+      </div>
+      <div class="services-grid reveal reveal-delay-1">
+        <article class="service-card card">
+          <div class="service-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          </div>
+          <h3 class="service-title">Desenvolvimento Frontend</h3>
+          <p class="service-desc">Criacao de sites e landing pages modernas, rapidas e responsivas utilizando tecnologias atuais do mercado.</p>
+          <div class="service-tags">
+            <span class="tech-tag">HTML</span>
+            <span class="tech-tag">Tailwind</span>
+            <span class="tech-tag">JavaScript</span>
+            <span class="tech-tag">React</span>
+          </div>
+        </article>
+        <article class="service-card card">
+          <div class="service-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9l20-7z"/></svg>
+          </div>
+          <h3 class="service-title">Estrategia de Social Media</h3>
+          <p class="service-desc">Planejamento estrategico de conteudo para redes sociais com foco em posicionamento de marca, autoridade e crescimento organico.</p>
+          <div class="service-tags">
+            <span class="tech-tag">Planejamento</span>
+            <span class="tech-tag">Estrategia</span>
+            <span class="tech-tag">Crescimento</span>
+          </div>
+        </article>
+        <article class="service-card card">
+          <div class="service-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+          </div>
+          <h3 class="service-title">UX / UI Design</h3>
+          <p class="service-desc">Design de interfaces focadas em experiencia do usuario, clareza e conversao, garantindo que cada interacao seja simples e eficiente.</p>
+          <div class="service-tags">
+            <span class="tech-tag">Wireframes</span>
+            <span class="tech-tag">Prototipos</span>
+            <span class="tech-tag">Figma</span>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- PROJETOS -->
+  <section id="projetos" class="section" aria-label="Projetos">
+    <div class="container">
+      <div class="section-label reveal">
+        <span class="num">04</span>
+        <div class="line"></div>
+        <span class="label">Projetos</span>
+      </div>
+      <div class="section-header reveal">
+        <h2 class="section-title">Trabalhos <span class="text-gradient">selecionados</span></h2>
+        <p class="section-subtitle">Clique em uma categoria para ver exemplos de projetos.</p>
+      </div>
+      <div class="projects-grid reveal reveal-delay-1">
+        <button onclick="openProjectModal('paginas')" class="project-card card" aria-label="Ver projetos de paginas">
+          <div class="project-preview">
+            <div class="project-preview-dots" aria-hidden="true"><span></span><span></span><span></span></div>
+            <svg class="project-preview-icon" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+          </div>
+          <div class="project-info">
+            <h3 class="project-title">Paginas</h3>
+            <p class="project-desc">Landing pages, sites institucionais e paginas de vendas otimizadas para conversao.</p>
+            <span class="project-cta">Ver exemplos <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg></span>
+          </div>
+        </button>
+        <button onclick="openProjectModal('posts')" class="project-card card" aria-label="Ver projetos de posts">
+          <div class="project-preview">
+            <div class="project-preview-dots" aria-hidden="true"><span></span><span></span><span></span></div>
+            <svg class="project-preview-icon" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+          </div>
+          <div class="project-info">
+            <h3 class="project-title">Posts</h3>
+            <p class="project-desc">Conteudos estrategicos para redes sociais focados em engajamento e posicionamento de marca.</p>
+            <span class="project-cta">Ver exemplos <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg></span>
+          </div>
+        </button>
+        <button onclick="openProjectModal('videos')" class="project-card card" aria-label="Ver projetos de videos">
+          <div class="project-preview">
+            <div class="project-preview-dots" aria-hidden="true"><span></span><span></span><span></span></div>
+            <svg class="project-preview-icon" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          </div>
+          <div class="project-info">
+            <h3 class="project-title">Videos</h3>
+            <p class="project-desc">Motion design e conteudos visuais que aumentam alcance e atencao nas redes sociais.</p>
+            <span class="project-cta">Ver exemplos <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg></span>
+          </div>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <div id="project-modal" class="modal-overlay hidden" role="dialog" aria-modal="true" onclick="closeModalOnBackdrop(event,'project-modal')">
+    <div class="modal-box" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <h3 id="modal-title" class="modal-title"></h3>
+        <button class="modal-close" onclick="closeModal('project-modal')" aria-label="Fechar">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div id="modal-body" class="modal-body"></div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- PLANOS -->
+  <section id="planos" class="section" aria-label="Planos e precos">
+    <div class="container">
+      <div class="section-label reveal">
+        <span class="num">05</span>
+        <div class="line"></div>
+        <span class="label">Planos</span>
+      </div>
+      <div class="section-header reveal">
+        <h2 class="section-title">Precos simples e <span class="text-gradient">transparentes</span></h2>
+        <p class="section-subtitle">Escolha o plano ideal para o momento da sua empresa.</p>
+      </div>
+      <div class="pricing-grid reveal reveal-delay-1">
+
+        <!-- Starter -->
+        <div class="pricing-card card">
+          <p class="pricing-plan-type mono">Pagina Web</p>
+          <h3 class="pricing-title">Starter</h3>
+          <div class="pricing-price"><sup>R$</sup>900</div>
+          <p class="pricing-desc">Para quem precisa iniciar sua presenca digital.</p>
+          <ul class="pricing-features">
+            <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>Landing page simples</li>
+            <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>Design responsivo</li>
+            <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>Otimizacao basica</li>
+            <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>Integracao com WhatsApp</li>
+            <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>1 revisao inclusa</li>
+          </ul>
+          <a href="#contato" class="btn-outline" style="display:flex;justify-content:center">Comecar agora</a>
+        </div>
+
+        <!-- Pro (featured) -->
+        <div class="pricing-card pricing-featured card">
+          <div class="pricing-badge mono">Mais Popular</div>
+          <p class="pricing-plan-type mono">Presenca Digital</p>
+          <h3 class="pricing-title">Pro</h3>
+          <div class="pricing-price"><sup>R$</sup>2.000 <span class="period">/ mes</span></div>
+          <p class="pricing-desc">Para empresas que querem crescer no digital.</p>
+          <ul class="pricing-features">
+            <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>Gestao estrategica de social media</li>
+            <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>Planejamento de conteudo</li>
+            <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>Landing page ou pagina de vendas</li>
+            <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>Design de posts profissionais</li>
+            <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>Otimizacao de presenca digital</li>
+            <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>Suporte e ajustes continuos</li>
+          </ul>
+          <a href="#contato" class="btn-primary" style="display:flex;justify-content:center">Comecar agora</a>
+        </div>
+
+        <!-- Enterprise -->
+        <div class="pricing-card card">
+          <p class="pricing-plan-type mono">Solucao Completa</p>
+          <h3 class="pricing-title">Enterprise</h3>
+          <div class="pricing-price" style="font-size:22px;letter-spacing:-0.01em">Sob consulta</div>
+          <p class="pricing-desc">Para marcas que querem estrutura digital completa.</p>
+          <ul class="pricing-features">
+            <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>Estrategia digital completa</li>
+            <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>Desenvolvimento de site completo</li>
+            <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>Landing pages ilimitadas</li>
+            <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>Gestao de redes sociais</li>
+            <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>Design estrategico</li>
+            <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>Consultoria mensal</li>
+          </ul>
+          <a href="#contato" class="btn-outline" style="display:flex;justify-content:center">Vamos conversar</a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- DEPOIMENTOS -->
+  <section id="depoimentos" class="section" aria-label="Depoimentos">
+    <div class="container">
+      <div class="section-label reveal">
+        <span class="num">06</span>
+        <div class="line"></div>
+        <span class="label">Depoimentos</span>
+      </div>
+      <div class="testimonials-header reveal">
+        <h2 class="section-title" style="margin-bottom:0">O que os clientes <span class="text-gradient">dizem</span></h2>
+        <button onclick="openModal('testimonial-modal')" class="btn-outline" style="white-space:nowrap;display:inline-flex;align-items:center;gap:8px">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 5v14M5 12h14"/></svg>
+          Deixar depoimento
+        </button>
+      </div>
+      <div class="notif-grid reveal reveal-delay-1">
+
+        <div class="notif-card">
+          <div class="notif-top">
+            <div class="notif-app">
+              <div class="notif-app-icon"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg></div>
+              <span class="notif-app-name">Mensagens</span>
+            </div>
+            <span class="notif-time">agora</span>
+          </div>
+          <div class="notif-stars">
+            <svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+            <svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+            <svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+            <svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+            <svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+          </div>
+          <p class="notif-body">A Ana conseguiu transformar nossa presenca digital. Nosso site ficou muito mais profissional e as landing pages comecaram a gerar leads rapidamente.</p>
+          <div class="notif-sender">
+            <div class="notif-avatar">C</div>
+            <div><p class="notif-name">Cliente</p><p class="notif-role">Empresa Parceira</p></div>
+          </div>
+        </div>
+
+        <div class="notif-card">
+          <div class="notif-top">
+            <div class="notif-app">
+              <div class="notif-app-icon"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg></div>
+              <span class="notif-app-name">Mensagens</span>
+            </div>
+            <span class="notif-time">agora</span>
+          </div>
+          <div class="notif-stars">
+            <svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+            <svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+            <svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+            <svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+            <svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+          </div>
+          <p class="notif-body">A estrategia de social media dobrou nosso engajamento em apenas dois meses. Ela entende de verdade o posicionamento digital e entrega resultados.</p>
+          <div class="notif-sender">
+            <div class="notif-avatar">J</div>
+            <div><p class="notif-name">Julia Ferreira</p><p class="notif-role">Diretora de Marketing</p></div>
+          </div>
+        </div>
+
+        <div class="notif-card">
+          <div class="notif-top">
+            <div class="notif-app">
+              <div class="notif-app-icon"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg></div>
+              <span class="notif-app-name">Mensagens</span>
+            </div>
+            <span class="notif-time">agora</span>
+          </div>
+          <div class="notif-stars">
+            <svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+            <svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+            <svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+            <svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+            <svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+          </div>
+          <p class="notif-body">O redesign entregado pela Ana reduziu nossa taxa de abandono em 40%. Ela pensa de forma holistica e entrega com precisao. Recomendo muito.</p>
+          <div class="notif-sender">
+            <div class="notif-avatar">R</div>
+            <div><p class="notif-name">Rafael Costa</p><p class="notif-role">Product Manager</p></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <div id="testimonial-modal" class="modal-overlay hidden" role="dialog" aria-modal="true" onclick="closeModalOnBackdrop(event,'testimonial-modal')">
+    <div class="modal-box" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <h3 class="modal-title">Deixar um depoimento</h3>
+        <button class="modal-close" onclick="closeModal('testimonial-modal')" aria-label="Fechar"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M18 6L6 18M6 6l12 12"/></svg></button>
+      </div>
+      <div class="modal-body">
+        <div class="form-field">
+          <p class="form-label">Avaliacao</p>
+          <div class="star-rating" id="star-rating" role="radiogroup">
+            <button class="star-btn" data-star="1" onclick="setStars(1)" aria-label="1 estrela">&#9733;</button>
+            <button class="star-btn" data-star="2" onclick="setStars(2)" aria-label="2 estrelas">&#9733;</button>
+            <button class="star-btn" data-star="3" onclick="setStars(3)" aria-label="3 estrelas">&#9733;</button>
+            <button class="star-btn" data-star="4" onclick="setStars(4)" aria-label="4 estrelas">&#9733;</button>
+            <button class="star-btn" data-star="5" onclick="setStars(5)" aria-label="5 estrelas">&#9733;</button>
+          </div>
+        </div>
+        <div class="form-field"><label class="form-label" for="t-name">Seu nome</label><input id="t-name" type="text" class="form-input" placeholder="Ex: Maria Santos"/></div>
+        <div class="form-field"><label class="form-label" for="t-role">Cargo / empresa</label><input id="t-role" type="text" class="form-input" placeholder="Ex: CEO na Empresa X"/></div>
+        <div class="form-field"><label class="form-label" for="t-msg">Mensagem</label><textarea id="t-msg" class="form-input" placeholder="Conte sobre a sua experiencia..."></textarea></div>
+        <button onclick="submitTestimonial()" class="btn-primary" style="width:100%;justify-content:center">Enviar depoimento</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- CONTATO -->
+  <section id="contato" class="section" aria-label="Contato">
+    <div class="container">
+      <div class="section-label reveal">
+        <span class="num">07</span>
+        <div class="line"></div>
+        <span class="label">Contato</span>
+      </div>
+      <div class="section-header reveal">
+        <h2 class="section-title">Vamos construir algo <span class="text-gradient">juntos</span></h2>
+        <p class="section-subtitle">Tem um projeto em mente? Vamos conversar sobre como podemos criar algo incrivel para sua marca.</p>
+      </div>
+      <div class="contact-grid reveal reveal-delay-1">
+        <div>
+          <p class="form-label" style="margin-bottom:16px">Me encontre em</p>
+          <div class="contact-links">
+            <a href="#" target="_blank" rel="noopener" class="contact-link-card card" aria-label="LinkedIn">
+              <div class="contact-link-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg></div>
+              <div><p class="contact-link-name">LinkedIn</p><p class="contact-link-handle mono">@anarodrigues</p></div>
+              <svg class="contact-link-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+            </a>
+            <a href="#" target="_blank" rel="noopener" class="contact-link-card card" aria-label="GitHub">
+              <div class="contact-link-icon" style="background:var(--bg-surface);border-color:var(--border);color:var(--text-secondary)"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.48 2 2 6.58 2 12.24c0 4.52 2.87 8.35 6.84 9.7.5.09.68-.22.68-.49v-1.7C6.73 20.3 6.14 18.45 6.14 18.45c-.46-1.19-1.12-1.5-1.12-1.5-.91-.64.07-.63.07-.63 1.01.07 1.54 1.06 1.54 1.06.9 1.57 2.36 1.12 2.94.85.09-.66.35-1.12.64-1.38-2.24-.26-4.59-1.14-4.59-5.07 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.71 0 0 .84-.27 2.75 1.05A9.38 9.38 0 0112 7.43c.85.004 1.7.12 2.5.34 1.9-1.32 2.74-1.05 2.74-1.05.55 1.41.2 2.45.1 2.71.64.72 1.03 1.63 1.03 2.75 0 3.94-2.36 4.81-4.61 5.06.36.32.68.94.68 1.9v2.82c0 .27.18.59.69.49C19.14 20.59 22 16.76 22 12.24 22 6.58 17.52 2 12 2z"/></svg></div>
+              <div><p class="contact-link-name">GitHub</p><p class="contact-link-handle mono">@anadev</p></div>
+              <svg class="contact-link-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+            </a>
+            <a href="#" target="_blank" rel="noopener" class="contact-link-card card" aria-label="Portfolio em video">
+              <div class="contact-link-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
+              <div><p class="contact-link-name">Portfolio em Video</p><p class="contact-link-handle mono">Google Drive</p></div>
+              <svg class="contact-link-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+            </a>
+          </div>
+        </div>
+        <div class="contact-form card">
+          <div class="contact-success" id="contact-success">
+            <div class="success-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></div>
+            <h4>Mensagem enviada!</h4>
+            <p>Responderei em ate 24 horas.</p>
+          </div>
+          <div id="contact-form-wrap">
+            <div class="contact-form-row" style="margin-bottom:14px">
+              <div class="form-field" style="margin-bottom:0"><label class="form-label" for="c-name">Nome</label><input id="c-name" type="text" class="form-input" placeholder="Seu nome"/></div>
+              <div class="form-field" style="margin-bottom:0"><label class="form-label" for="c-email">E-mail</label><input id="c-email" type="email" class="form-input" placeholder="seu@email.com"/></div>
+            </div>
+            <div class="form-field"><label class="form-label" for="c-msg">Mensagem</label><textarea id="c-msg" class="form-input" rows="5" placeholder="Conte sobre o seu projeto..."></textarea></div>
+            <button onclick="submitContactForm(event)" class="btn-primary" style="width:100%;justify-content:center">
+              Enviar mensagem
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <div class="footer-inner">
+        <p class="footer-logo">AR<span>.</span></p>
+        <p class="footer-copy">2025 Ana Rodrigues. Todos os direitos reservados.</p>
+        <p class="footer-stack mono">HTML + CSS + JS</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const cursorDot=document.getElementById('cursor-dot'),cursorRing=document.getElementById('cursor-ring');
+    const isTouchDevice='ontouchstart' in window;
+    if(isTouchDevice){cursorDot.style.display='none';cursorRing.style.display='none';document.body.style.cursor='auto';document.querySelectorAll('a,button,[role="button"]').forEach(el=>el.style.cursor='pointer');}
+    else{document.addEventListener('mousemove',e=>{cursorDot.style.left=e.clientX+'px';cursorDot.style.top=e.clientY+'px';cursorRing.style.left=e.clientX+'px';cursorRing.style.top=e.clientY+'px';});document.addEventListener('mouseleave',()=>{cursorDot.style.opacity='0';cursorRing.style.opacity='0';});document.addEventListener('mouseenter',()=>{cursorDot.style.opacity='1';cursorRing.style.opacity='1';});}
+
+    let currentTheme=localStorage.getItem('theme')||'dark';
+    applyTheme(currentTheme);
+    function applyTheme(theme){document.documentElement.setAttribute('data-theme',theme);currentTheme=theme;localStorage.setItem('theme',theme);document.getElementById('icon-moon').classList.toggle('hidden',theme==='light');document.getElementById('icon-sun').classList.toggle('hidden',theme==='dark');}
+    function toggleTheme(){const next=currentTheme==='dark'?'light':'dark';applyTheme(next);showToast(next==='light'?'Tema claro ativado':'Tema escuro ativado');}
+
+    const navbar=document.getElementById('navbar');
+    window.addEventListener('scroll',()=>{navbar.classList.toggle('scrolled',window.scrollY>40);},{passive:true});
+
+    let mobileMenuOpen=false;
+    function toggleMobileMenu(){mobileMenuOpen=!mobileMenuOpen;const menu=document.getElementById('mobile-menu'),hamburger=document.getElementById('hamburger');menu.classList.toggle('open',mobileMenuOpen);hamburger.classList.toggle('open',mobileMenuOpen);hamburger.setAttribute('aria-expanded',mobileMenuOpen);}
+    function closeMobileMenu(){mobileMenuOpen=false;document.getElementById('mobile-menu').classList.remove('open');const hamburger=document.getElementById('hamburger');hamburger.classList.remove('open');hamburger.setAttribute('aria-expanded','false');}
+
+    const revealObserver=new IntersectionObserver(entries=>{entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('visible');revealObserver.unobserve(entry.target);}});},{threshold:0.1});
+    document.querySelectorAll('.reveal').forEach(el=>revealObserver.observe(el));
+
+    const sections=document.querySelectorAll('section[id]'),navLinks=document.querySelectorAll('.nav-link[data-section]');
+    const sectionObserver=new IntersectionObserver(entries=>{entries.forEach(entry=>{if(entry.isIntersecting){navLinks.forEach(link=>{link.classList.toggle('active',link.dataset.section===entry.target.id);});}});},{threshold:0.4});
+    sections.forEach(s=>sectionObserver.observe(s));
+
+    function animateCount(el){const target=parseInt(el.dataset.target,10),suffix=el.dataset.suffix||'',duration=1400,steps=duration/16,step=target/steps;let current=0;const timer=setInterval(()=>{current=Math.min(current+step,target);el.textContent=Math.floor(current)+suffix;if(current>=target)clearInterval(timer);},16);}
+    const statsObserver=new IntersectionObserver(entries=>{entries.forEach(entry=>{if(entry.isIntersecting){entry.target.querySelectorAll('.stat-num').forEach(animateCount);statsObserver.unobserve(entry.target);}});},{threshold:0.5});
+    document.querySelectorAll('#sobre').forEach(s=>statsObserver.observe(s));
+
+    const roles=['Desenvolvedora Frontend','Designer UX/UI','Estrategista de Conteudo','Especialista em Presenca Digital'];
+    let roleIndex=0,charIndex=0,deleting=false;
+    const typedEl=document.getElementById('typed-role');
+    function typeEffect(){const current=roles[roleIndex];if(!deleting){typedEl.textContent=current.slice(0,charIndex+1);charIndex++;if(charIndex===current.length){deleting=true;setTimeout(typeEffect,1800);return;}}else{typedEl.textContent=current.slice(0,charIndex-1);charIndex--;if(charIndex===0){deleting=false;roleIndex=(roleIndex+1)%roles.length;}}setTimeout(typeEffect,deleting?40:75);}
+    setTimeout(typeEffect,800);
+
+    function openModal(id){document.getElementById(id).classList.remove('hidden');document.body.style.overflow='hidden';}
+    function closeModal(id){document.getElementById(id).classList.add('hidden');document.body.style.overflow='';}
+    function closeModalOnBackdrop(e,id){if(e.target===document.getElementById(id))closeModal(id);}
+    document.addEventListener('keydown',e=>{if(e.key!=='Escape')return;['project-modal','testimonial-modal'].forEach(id=>{const el=document.getElementById(id);if(el&&!el.classList.contains('hidden'))closeModal(id);});});
+
+    const projectData={
+      paginas:{title:'Paginas — Projetos Web',items:[{label:'Landing Page SaaS',desc:'Hero focado em conversao, precos e depoimentos.',tech:'React + Tailwind'},{label:'Site Institucional',desc:'Portfolio corporativo dark minimalista com foco em autoridade.',tech:'HTML + CSS + JS'},{label:'Pagina de Vendas',desc:'Pagina otimizada para conversao com checkout fluido.',tech:'Next.js + Stripe'}]},
+      posts:{title:'Posts — Conteudo Social',items:[{label:'Serie de Identidade de Marca',desc:'Carrossel de 12 posts revelando um rebranding completo.',tech:'Figma + Canva'},{label:'Reels de Dicas Tech',desc:'Micro-conteudo educativo para audiencia dev.',tech:'CapCut + Figma'},{label:'Campanha de Lancamento',desc:'Conteudo coordenado em multiplas plataformas.',tech:'Estrategia + Design'}]},
+      videos:{title:'Videos — Motion Content',items:[{label:'Demo Reel do App',desc:'Walkthrough polido do produto com motion graphics.',tech:'Premiere + AE'},{label:'Historia da Marca',desc:'Video de storytelling do fundador para redes e decks.',tech:'DaVinci Resolve'},{label:'Serie de Tutoriais',desc:'Playlist de tutoriais de coding frontend passo a passo.',tech:'OBS + Premiere'}]}
+    };
+
+    function openProjectModal(type){const data=projectData[type];document.getElementById('modal-title').textContent=data.title;document.getElementById('modal-body').innerHTML=data.items.map(item=>`<div class="modal-project-item"><div class="modal-project-item-header"><p class="modal-project-item-title">${item.label}</p><span class="tech-tag" style="white-space:nowrap">${item.tech}</span></div><p class="modal-project-item-desc">${item.desc}</p></div>`).join('');openModal('project-modal');}
+
+    let carouselIndex=0;
+    const track=document.getElementById('carousel-track'),dotsEl=document.getElementById('carousel-dots');
+    function getSlidesPerView(){return window.innerWidth>=768?2:1;}
+    function getSlideCount(){return track.querySelectorAll('.carousel-slide').length;}
+    function getMaxIndex(){return Math.max(0,getSlideCount()-getSlidesPerView());}
+    function updateCarousel(){const spv=getSlidesPerView(),container=track.parentElement,gap=16,slideW=(container.offsetWidth-gap*(spv-1))/spv;track.style.transform=`translateX(-${carouselIndex*(slideW+gap)}px)`;dotsEl.innerHTML='';const max=getMaxIndex();for(let i=0;i<=max;i++){const dot=document.createElement('button'),isActive=i===carouselIndex;dot.setAttribute('role','tab');dot.setAttribute('aria-selected',isActive);dot.setAttribute('aria-label',`Depoimento ${i+1}`);dot.className='carousel-dot'+(isActive?' active':'');dot.style.width=isActive?'24px':'8px';dot.addEventListener('click',()=>{carouselIndex=i;updateCarousel();});dotsEl.appendChild(dot);}}
+    function carouselNext(){carouselIndex=Math.min(carouselIndex+1,getMaxIndex());updateCarousel();}
+    function carouselPrev(){carouselIndex=Math.max(carouselIndex-1,0);updateCarousel();}
+    window.addEventListener('resize',()=>{carouselIndex=Math.min(carouselIndex,getMaxIndex());updateCarousel();},{passive:true});
+    updateCarousel();
+
+    function setStars(n){document.querySelectorAll('#star-rating .star-btn').forEach((btn,i)=>{btn.classList.toggle('active',i<n);});}
+    function submitTestimonial(){closeModal('testimonial-modal');showToast('Depoimento enviado. Obrigada!');}
+
+    function submitContactForm(e){const name=document.getElementById('c-name').value.trim(),email=document.getElementById('c-email').value.trim(),msg=document.getElementById('c-msg').value.trim();if(!name||!email||!msg){const btn=e.currentTarget;btn.style.transform='translateX(-5px)';setTimeout(()=>{btn.style.transform='translateX(4px)';},80);setTimeout(()=>{btn.style.transform='';},160);showToast('Preencha todos os campos.');return;}document.getElementById('contact-form-wrap').style.display='none';document.getElementById('contact-success').classList.add('visible');}
+
+    let toastTimer;
+    function showToast(msg){const toast=document.getElementById('toast');toast.textContent=msg;toast.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>toast.classList.remove('show'),2800);}
+
+    const backToTop=document.getElementById('back-to-top');
+    window.addEventListener('scroll',()=>{backToTop.classList.toggle('visible',window.scrollY>400);},{passive:true});
+  </script>
+</body>
+</html>

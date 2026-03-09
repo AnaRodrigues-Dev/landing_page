@@ -860,15 +860,6 @@
     function closeModalOnBackdrop(e,id){if(e.target===document.getElementById(id))closeModal(id);}
     document.addEventListener('keydown',e=>{if(e.key!=='Escape')return;['project-modal','testimonial-modal'].forEach(id=>{const el=document.getElementById(id);if(el&&!el.classList.contains('hidden'))closeModal(id);});});
 
-    /* =============================================
-       DADOS DOS PROJETOS
-       Nomenclatura organizada:
-       - Social Media card preview : logo1..logo4
-       - Modal Logos               : logo1..logo4
-       - Modal Posts & Artes       : logo1..logo4 + post1..post2
-       - Dev card preview          : project1..project4
-       - Modal Dev                 : project1..project4
-       ============================================= */
     const projectData = {
       socialmedia: {
         title: 'Social Media — Posts & Logos',
@@ -1074,7 +1065,7 @@
       pending.push({ id: Date.now(), name, role: role||'—', stars: selectedStars, msg });
       savePending(pending);
       closeModal('testimonial-modal');
-      showToast('Depoimento enviado! Aguardando aprovacao ✨');
+      showToast('Depoimento enviado! Obrigada pelo feedback.)');
       document.getElementById('t-name').value='';
       document.getElementById('t-role').value='';
       document.getElementById('t-msg').value='';
